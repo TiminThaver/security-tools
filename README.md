@@ -20,21 +20,22 @@ A Python tool for analyzing security logs to detect potential security threats a
 ```bash
 python3 log_analyzer.py /path/to/logfile
 
- Network Scanner (network_scanner.py)
+### Network Scanner (network_scanner.py)
 A multi-threaded network scanning tool for identifying open ports and services.
-Features
 
-# Multi-threaded port scanning
-Service identification
-Customizable port ranges
-Detailed reporting
+#### Features
+- Multi-threaded port scanning
+- Service identification  
+- Customizable port ranges
+- Detailed reporting
+
+#### Quick Start
+```python
+python3 network_scanner.py <target_ip>
 
 
-### Quick Start
-bashCopypython3 network_scanner.py <target_ip>
 Security Notice
 
 Only use on networks you own/have permission to test
+Follow local laws and regulations
 
-### Follow local laws and regulations
-The key is making it easy to understand at first glance while providing enough detail to show your technical knowledge. Would you like me to help reformat specific sections?
