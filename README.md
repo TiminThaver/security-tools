@@ -17,6 +17,7 @@ A Python tool for analyzing security logs to detect potential security threats a
 - Detailed reporting
 
 #### Quick Start
+
 ```bash
 python3 log_analyzer.py /path/to/logfile
 
@@ -34,8 +35,9 @@ A multi-threaded network scanning tool for identifying open ports and services.
 python3 network_scanner.py <target_ip>
 
 
-Security Notice
+### Security Notice
 
 Only use on networks you own/have permission to test
 Follow local laws and regulations
+
 
