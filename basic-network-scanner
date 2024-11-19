@@ -1,0 +1,96 @@
+```python
+#!/usr/bin/python3
+"""
+Basic Network Scanner
+Author: Timin Thaver
+Purpose: Scans network for open ports and identifies basic services
+Usage: python3 network_scanner.py <target_ip>
+"""
+
+import socket
+import sys
+import threading
+from queue import Queue
+import time
+
+class NetworkScanner:
+    def __init__(self, target):
+        """Initialize scanner with target IP"""
+        self.target = target
+        self.queue = Queue()
+        self.open_ports = []
+        self.common_ports = {
+            21: "FTP",
+            22: "SSH",
+            23: "Telnet",
+            25: "SMTP",
+            80: "HTTP",
+            443: "HTTPS",
+            3389: "RDP"
+        }
+        
+    def port_scan(self, port):
+        """Scan individual port"""
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(1)
+            result = sock.connect_ex((self.target, port))
+            if result == 0:
+                service = self._identify_service(port)
+                self.open_ports.append((port, service))
+            sock.close()
+        except:
+            pass
+            
+    def _identify_service(self, port):
+        """Identify common services based on port number"""
+        return self.common_ports.get(port, "Unknown")
+    
+    def threader(self):
+        """Thread worker for scanning ports"""
+        while True:
+            port = self.queue.get()
+            self.port_scan(port)
+            self.queue.task_done()
+            
+    def scan(self, start_port=1, end_port=1024, threads=100):
+        """Main scanning function"""
+        print(f"\nStarting scan on {self.target}")
+        print("=" * 50)
+        
+        # Start thread pool
+        for _ in range(threads):
+            t = threading.Thread(target=self.threader)
+            t.daemon = True
+            t.start()
+            
+        # Add ports to queue
+        for port in range(start_port, end_port + 1):
+            self.queue.put(port)
+            
+        self.queue.join()
+        
+    def generate_report(self):
+        """Generate scan results report"""
+        report = "\nScan Results\n"
+        report += "=" * 50 + "\n"
+        report += f"Target: {self.target}\n"
+        report += f"Open Ports: {len(self.open_ports)}\n\n"
+        
+        for port, service in sorted(self.open_ports):
+            report += f"Port {port}: {service}\n"
+            
+        return report
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python3 network_scanner.py <target_ip>")
+        sys.exit(1)
+        
+    scanner = NetworkScanner(sys.argv[1])
+    scanner.scan()
+    print(scanner.generate_report())
+
+if __name__ == "__main__":
+    main()
+```
